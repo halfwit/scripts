@@ -26,8 +26,8 @@ handle_results() {
 		done
 }
 if [[ $1 == "wc" ]]; then
-	crawl "$HOME/local" | wc -l
+	crawl "$HOME/local/src" | wc -l
 else
-	crawl "$HOME/local" | dmenu -p "Pull repos: " | handle_results 
+	crawl "$HOME/local/src" | dmenu -p "Pull repos: " | handle_results 
 	"$XDG_DATA_HOME"/x11/gitbar &
 fi
