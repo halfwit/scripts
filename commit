@@ -24,8 +24,8 @@ handle_results() {
 		done
 }
 if [[ $1 == "wc" ]]; then
-	crawl "$HOME" | wc -l
+	cat <(crawl ~/code) <(crawl "$XDG_CONFIG_HOME") | wc -l
 else
-	crawl "$HOME" | column -s '|' -t | dmenu -p "Commit: " | handle_results 
-	"$XDG_DATA_HOME"/x11/gitbar &
+	cat <(crawl "$XDG_CONFIG_HOME") <(crawl ~/code) | column -s '|' -t | dmenu -p "Commit: " | handle_results 
+	/usr/local/share/hwwm/gitbar &
 fi
