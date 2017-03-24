@@ -26,6 +26,7 @@ handle_results() {
 		done
 }
 
+# =^.^=
 if [[ $1 == "wc" ]]; then
 	cat <(crawl ~/code) <(crawl "$XDG_CONFIG_HOME") | wc -l
 else

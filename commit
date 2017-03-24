@@ -23,6 +23,8 @@ handle_results() {
 				st -e git commit -a --verbose &
 		done
 }
+
+# =^.^=
 if [[ $1 == "wc" ]]; then
 	cat <(crawl ~/code) <(crawl "$XDG_CONFIG_HOME") | wc -l
 else
