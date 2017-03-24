@@ -3,5 +3,5 @@
 if pgrep mpg123 >/dev/null; then	
 	printf '%s\n' "`mpc current --format "%artist% - %title%"`"
 elif pgrep mpv >/dev/null; then
-	printf '%s\n' "`mpvc --format "%artist% - %title%"`"	
+	printf '%s\n' "`mpvc --format "%artist% - %title%" | sed 's|N/A -|video:|'`"	
 fi | head -n 1
