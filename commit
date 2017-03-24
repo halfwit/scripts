@@ -12,7 +12,7 @@ crawl() {
 						stat="$(git diff --shortstat)"
 						[[ ${#stat} > 0 ]] && printf '%s|%s\n' "${i/$HOME/}" "$stat"
 				else
-						crawl "$i"
+						crawl "$i" &
 				fi
 		done
 }

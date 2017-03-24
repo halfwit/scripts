@@ -13,7 +13,7 @@ crawl() {
 								*ahead*) printf '%s\n' "${i/$HOME/}" ;;
 						esac	
 				else
-						crawl "$i"
+						crawl "$i" &
 				fi
 		done
 }
