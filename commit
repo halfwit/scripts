@@ -1,5 +1,15 @@
 #!/bin/bash
 
+check() {
+	cd "$1" || return 0
+	if git rev-parse --show-toplevel &>/dev/null; then
+			stat="$(git diff --shortstat)"
+			[[ ${#stat} > 0 ]] && printf '%s|%s\n' "${1/$HOME/}" "$stat"
+			return 1
+	fi
+	return 0
+}
+
 crawl() {
 	for i in $1/*; do
 		if test -d $i 2>/dev/null; then
@@ -7,12 +17,7 @@ crawl() {
 		else
 			continue
 		fi
-		if git rev-parse --show-toplevel &>/dev/null; then
-			stat="$(git diff --shortstat)"
-			[[ ${#stat} > 0 ]] && printf '%s|%s\n' "${i/$HOME/}" "$stat"
-		else
-			crawl "$i" &
-		fi
+		check "$i" && crawl "$i" &
 	done
 }
 
@@ -25,8 +30,8 @@ handle_results() {
 
 # =^.^=
 if [[ $1 == "wc" ]]; then
-	cat <(crawl ~/code) <(crawl "$XDG_CONFIG_HOME") | wc -l
+	cat <(crawl ~/code) <(check "$XDG_CONFIG_HOME") | wc -l
 else
-	cat <(crawl "$XDG_CONFIG_HOME") <(crawl ~/code) | column -s '|' -t | dmenu -p "Commit: " | handle_results 
+	cat <(check "$XDG_CONFIG_HOME") <(crawl ~/code) | column -s '|' -t | dmenu -p "Commit: " | handle_results 
 	/usr/local/share/hwwm/gitbar &
 fi

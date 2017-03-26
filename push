@@ -1,5 +1,17 @@
 #!/bin/bash
 # Branches should be handled with much more care, do not use for branches
+
+check() {
+	cd "$1" || return 0
+	if git  rev-parse --is-inside-work-tree &>/dev/null; then
+		case "$(git status | sed -n 2p)" in
+			*ahead*) printf '%s\n' "${i/$HOME/}" 
+					return 1;;
+		esac	
+	fi
+	return 0
+}
+
 crawl() {
 		for i in $1/*; do
 				if test -d $i 2>/dev/null; then
@@ -7,14 +19,7 @@ crawl() {
 				else
 						continue
 				fi
-				
-				if git  rev-parse --is-inside-work-tree &>/dev/null; then
-						case "$(git status | sed -n 2p)" in
-								*ahead*) printf '%s\n' "${i/$HOME/}" ;;
-						esac	
-				else
-						crawl "$i" &
-				fi
+				check "$i" && crawl "$i" &
 		done
 }
 
@@ -28,8 +33,8 @@ handle_results() {
 
 # =^.^=
 if [[ $1 == "wc" ]]; then
-	cat <(crawl ~/code) <(crawl "$XDG_CONFIG_HOME") | wc -l
+	cat <(crawl ~/code) <(check "$XDG_CONFIG_HOME") | wc -l
 else
-	cat <(crawl ~/code) <(crawl "$XDG_CONFIG_HOME") | dmenu -p "Push repo: " | handle_results 
+	cat <(crawl ~/code) <(check "$XDG_CONFIG_HOME") | dmenu -p "Push repo: " | handle_results 
 	/usr/local/share/hwwm/gitbar &
 fi
