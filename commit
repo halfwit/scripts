@@ -34,6 +34,5 @@ if [[ $1 == "wc" ]]; then
 else
 	cat <(check "$XDG_CONFIG_HOME") <(crawl ~/code) | column -s '|' -t | dmenu -p "Commit: " | handle_results 
 	/usr/local/share/hwwm/gitbar commit
-	/usr/local/share/hwwm/gitbar push &
-	
+	/usr/local/share/hwwm/gitbar push &	
 fi
