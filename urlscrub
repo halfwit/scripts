@@ -20,7 +20,7 @@ url_scrub() {
             *)                    printf '%s\n' "$item"                  ;;
         esac
     done
-	cat "$tmp" | sed 's|file://||' | xurls
+	sed 's|file://||' "$tmp" | xurls
 
 }
 
