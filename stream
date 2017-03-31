@@ -2,7 +2,7 @@
 
 if pgrep mpg123; then
 	pkill mpg123
-	echo "" > /tmp/statusmusic
+	echo -n > /tmp/statusmusic
 	exit 0
 fi
 mpc play
