@@ -24,5 +24,5 @@ if [[ $1 == "wc" ]]; then
 	crawl "$HOME/local/src" | wc -l
 else
 	crawl "$HOME/local/src" | dmenu -p "Pull repos: " | handle_results 
-	/usr/local/share/hwwm/gitbar pull &
+	/usr/local/share/hwwm/gitbar pull
 fi
