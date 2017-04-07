@@ -14,29 +14,15 @@ check() {
 
 crawl() {
 		for i in $1/*; do
-<<<<<<< HEAD
 				cd "$i" 2>/dev/null || continue
-=======
-				if test -d "$i" 2>/dev/null; then
-						cd "$i" || return 0
-				else
-						continue
-				fi
->>>>>>> 35c5ae606bf2d05d345ac8cf67928591c6bdbe48
 				check "$i" && crawl "$i" &
 		done
 }
 
 handle_results() {
 		while read -r url; do
-<<<<<<< HEAD
 				cd "$HOME${url%%\ *}" || continue
 				st -g 60x1+20+20 -c float -e git push
-						:
-=======
-				cd "$HOME${url%%\ *}" || return 0
-				st -g 60x1+20+20 -t float -e git push
->>>>>>> 35c5ae606bf2d05d345ac8cf67928591c6bdbe48
 		done
 }
 
