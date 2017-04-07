@@ -14,18 +14,14 @@ check() {
 
 crawl() {
 		for i in $1/*; do
-				if test -d $i 2>/dev/null; then
-						cd "$i"
-				else
-						continue
-				fi
+				cd "$i" 2>/dev/null || continue
 				check "$i" && crawl "$i" &
 		done
 }
 
 handle_results() {
 		while read -r url; do
-				cd "$HOME${url%%\ *}"
+				cd "$HOME${url%%\ *}" || continue
 				st -g 60x1+20+20 -c float -e git push
 						:
 		done
