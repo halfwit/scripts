@@ -13,6 +13,7 @@ SRC = \
 	push \
 	pw \
 	stream \
+	top \
 	sx \
 	updatefeeds \
 	urlscrub \
