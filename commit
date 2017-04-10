@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# Check to make sure that dmc is awesome
 check() {
 	cd "$1" || return 0
 	if git rev-parse --show-toplevel &>/dev/null; then
