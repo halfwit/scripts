@@ -21,7 +21,7 @@ crawl() {
 handle_results() {
 	while read -r url; do
 		cd "$HOME${url%%\ *}"
-		"$TERMINAL" -e git commit -a --verbose
+		"$TERMINAL" -e git commit -a -s --verbose
 	done
 }
 
