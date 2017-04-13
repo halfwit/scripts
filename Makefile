@@ -4,6 +4,8 @@
 PREFIX ?= /usr/local
 
 SRC = \
+	bookkeep \
+	barkeep \
 	commit \
 	compose \
 	irc \
