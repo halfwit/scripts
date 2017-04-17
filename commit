@@ -12,7 +12,7 @@ check() {
 }
 
 crawl() {
-	for i in $1/*; do
+	for i in "$1/*"; do
 		cd "$i" 2>/dev/null || continue
 		check "$i" && crawl "$i" &
 	done
