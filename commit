@@ -4,7 +4,7 @@
 check() {
 	cd "$1" || return 0
 	if git diff --shortstat 2>/dev/null | grep -q changed; then
-		printf '%s\n' "${1/$HOME/}"
+		printf '%s|%s\n' "${1/$HOME/}" "$(git diff --shortstat)"
 		return 1
 	fi
 	return 0
