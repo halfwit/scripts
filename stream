@@ -1,8 +1,13 @@
 #!/bin/bash
 
+trap 'clean' EXIT SIGINT SIGHUP
+
+clean() {
+	echo "" > "$XDG_RUNTIME_DIR/statusbar/media"
+}
+
 if pgrep mpg123; then
 	pkill mpg123
-	echo -n > /tmp/statusmusic
 	exit 0
 fi
 mpc play
