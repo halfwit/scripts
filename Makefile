@@ -16,6 +16,7 @@ SRC = \
 	pw \
 	stream \
 	top \
+	station \
 	sx \
 	updatefeeds \
 	urlscrub \
