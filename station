@@ -6,11 +6,10 @@ clean() {
 	echo "" > "$XDG_RUNTIME_DIR/statusbar/media"
 }
 
+# Kill off any running processes
 if pgrep mpg123; then
 	pkill mpg123
-	exit 0
 fi
-mpc play
 mpg123 --no-control -b 1024 "$1" &>/dev/stdout | while read -r line; do
 	echo "$line" | grep StreamTitle | sed "s/ICY-META: StreamTitle='/♫ /" | sed "s/';StreamUrl=.*//" | sed 's/\[.*\]//' | tail -c 80 > "$XDG_RUNTIME_DIR/statusbar/media"
 done
