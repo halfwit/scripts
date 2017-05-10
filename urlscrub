@@ -1,35 +1,7 @@
-#!/usr/bin/env bash
-# Cheapo url spawner for st
-
-# https://github.com/mvdan/xurls
-# https://github.com/Cloudef/bemenu
-# Currently strips newlines as well
-
-tmp=$(mktemp)
-
-menu() {
-    tac | dmenu -p URLs
-}
-
-url_scrub() {
-    local item
-    tee $tmp | tr -d "[:cntrl:]" | xurls | while read -r item; do
-        case "$item" in
-            *http://*|*https://*) sed 's/^.*\(http.*$\)/\1/' <<< "$item" ;;
-            *file:///*)           sed 's|file://||'          <<< "$item" ;;
-            *)                    printf '%s\n' "$item"                  ;;
-        esac
-    done
-	sed 's|file://||' "$tmp" | xurls
-
-}
-
-handle() {
-	local selection
-	while read -r selection; do
-		plumber "$selection" 
-	done
-	rm "$tmp"
-}
-
-url_scrub "$@" | menu | handle
+#!/bin/sh --
+# Cheapo url spawner for st using https://github.com/mvdan/xurls and https://github.com/halfwit/plumber
+## Split into two streams, remove control characters in one, then filter
+## This allows us to get multiline links in curses programs
+{ { tee /dev/fd/3 | tr -d "[:cntrl:]" >&9; 
+	} 3>&1 >&9; 
+} 9>&1 | sed 's/^.*\(http.*$\)/\1/;s|file://||' | xurls | uniq| tac | dmenu -p URLs | xe -s 'plumber $1'
