@@ -4,4 +4,4 @@
 ## This allows us to get multiline links in curses programs
 { { tee /dev/fd/3 | tr -d "[:cntrl:]" >&9; 
 	} 3>&1 >&9; 
-} 9>&1 | sed 's/^.*\(http.*$\)/\1/;s|file://||' | xurls | uniq| tac | dmenu -p URLs | xe -s 'plumber $1'
+} 9>&1 | xurls | sed 's/^.*\(http.*$\)/\1/;s|file://||' | uniq | tac | dmenu -p URLs | xe -s 'plumber $1'
