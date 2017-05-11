@@ -7,7 +7,8 @@ crawl() {
 					   git fetch &>/dev/null & 
 					   [[ $(git rev-parse HEAD) == $(git rev-parse @{u}) ]] >/dev/null || printf '%s\n' "${i/$HOME/}"
 				else
-					   crawl "$i" &
+						crawl "$i" &
+						wait
 				fi
 		done
 }
