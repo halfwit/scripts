@@ -1,6 +1,6 @@
 #!/bin/sh
 
-pkglist="$XDG_DATA_HOME/build/pkglist"
+pkglist="$XDG_CFG_HOME/build/pkglist"
 #TODO: Implement build tools
 #TODO: Statically link binaries built out of repo
 #TODO: See if there's a way to serve PXE files given an architecture
@@ -9,19 +9,22 @@ pkglist="$XDG_DATA_HOME/build/pkglist"
 # Using Void's build tool, create musl, glibc, arm musl binaries
 build() {
 	while read -r pkg; do
-		./xbps-src --somedir --flag-for-glibc "$pkg"
-		./xbps-src --somedir --flag-for-musl "$pkg"
-		./xbps-src --somedir --flag-for-arm "$pkg"
+		./xbps-src -I build -m glibc "$pkg"
+		./xbps-src -I build -m musl -a x86_64-musl "$pkg"
+		./xbps-src -I build -m arm7 -a armv7hf-musl "$pkg"
 	done
 }
 
 # Fire off our build process, rebuild any non-repo packages
+#check_updates
+cd "$HOME"/void-packages || exit 0
+./xbps-src clean
 ./xbps-src bootstrap-update
 ./xbps-src show-sys-updates #| build
 
 # chroot in to directories and set up system
 #chroot
-#xbps-install --repository=whatever pkglist
+#xbps-install pkglist
 
 # Generate an ISOs, for use with Qemu on the desktop
 # (So we can skip the arm binaries)
