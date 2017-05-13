@@ -9,9 +9,11 @@ pkglist="$XDG_CFG_HOME/build/pkglist"
 # Using Void's build tool, create musl, glibc, arm musl binaries
 build() {
 	while read -r pkg; do
-		./xbps-src -I build -m glibc "$pkg"
-		./xbps-src -I build -m musl -a x86_64-musl "$pkg"
-		./xbps-src -I build -m arm7 -a armv7hf-musl "$pkg"
+		# For now, just build our glibc targets.
+		./xbps-src pkg "$pkg"
+		#./xbps-src -I build -m glibc "$pkg"
+		#./xbps-src -I build -m musl -a x86_64-musl "$pkg"
+		#./xbps-src -I build -m arm7 -a armv7hf-musl "$pkg"
 	done
 }
 
@@ -20,7 +22,7 @@ build() {
 cd "$HOME"/void-packages || exit 0
 ./xbps-src clean
 ./xbps-src bootstrap-update
-./xbps-src show-sys-updates #| build
+./xbps-src show-sys-updates | build
 
 # chroot in to directories and set up system
 #chroot
