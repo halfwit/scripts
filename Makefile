@@ -21,6 +21,7 @@ SRC = \
 	updatefeeds \
 	urlscrub \
 	varless \
+	void-buildchain \
 	weather \
 	what \
 	when

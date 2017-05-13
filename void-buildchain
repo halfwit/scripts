@@ -1,0 +1,57 @@
+#!/bin/sh
+
+pkglist="$XDG_DATA_HOME/build/pkglist"
+#TODO: Implement build tools
+#TODO: Statically link binaries built out of repo
+#TODO: See if there's a way to serve PXE files given an architecture
+#TODO:Use Squashfs for filesystem to make it easy to load to ram
+
+# Using Void's build tool, create musl, glibc, arm musl binaries
+build() {
+	while read -r pkg; do
+		./xbps-src --somedir --flag-for-glibc "$pkg"
+		./xbps-src --somedir --flag-for-musl "$pkg"
+		./xbps-src --somedir --flag-for-arm "$pkg"
+	done
+}
+
+# Fire off our build process, rebuild any non-repo packages
+./xbps-src bootstrap-update
+./xbps-src show-sys-updates #| build
+
+# chroot in to directories and set up system
+#chroot
+#xbps-install --repository=whatever pkglist
+
+# Generate an ISOs, for use with Qemu on the desktop
+# (So we can skip the arm binaries)
+# dd "remote use" copy of ISO to our USB key that will stay in place, to be used if we leave the house
+#BUG: Do we need restart tftp to reflect new files?
+
+# cat/var/lib/tftpboot/pxelinux.cfg/default
+#UI vesamenu.c32
+#PROMPT 0
+#TIMEOUT 0
+
+#MENU DEFAULT ubqt-systems
+#LABEL ubqt-systems
+
+#MENU LABEL 1) Void Linux musl (x64)
+#KERNEL /path/to/my/iso
+#APPEND setkmap=dvorak nomodeset netboot=nbd://<server>:<path>
+#INITRC /path/to/initram.igz
+
+#MENU LABEL 2) Void Linux glibc (x64)
+#KERNEL /path/to/my/iso
+#APPEND setkmap=dvorak nomodeset netboot=ndb://<server>:<path>
+#INITRC /path/to/initram.igz
+
+#MENU LABEL 3) Lakka TV (x64)
+#KERNEL /path/to/my/iso
+#APPEND setkmap=dvvorak nomodeset netbood=ndb://<server>:<path>
+#INITRC /path/to/initram.igz
+
+#MENU LABEL 4) Void Linux musl (ARM)
+#KERNEL /path/to/my/iso
+#APPEND setkmap=dvorak nomodeset netboot=nbd://<server>:<path>
+
