@@ -4,7 +4,7 @@ pkglist="$XDG_CFG_HOME/build/pkglist"
 #TODO: Implement build tools
 #TODO: Statically link binaries built out of repo
 #TODO: See if there's a way to serve PXE files given an architecture
-#TODO:Use Squashfs for filesystem to make it easy to load to ram
+#TODO: Use Squashfs for filesystem to make it easy to load to ram
 
 # Using Void's build tool, create musl, glibc, arm musl binaries
 build() {

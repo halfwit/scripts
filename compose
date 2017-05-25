@@ -7,7 +7,7 @@ dansk() {
 
 espana() {
 #á, é, í, ó, ú, ý, ï, ü, Ü, ¿, and ¡. Á, É, Í, Ó, Ú, and Ý
-	echo "$@" | s ed 's/~n/ñ/g;s/~N/Ñ/g'
+	echo "$@" | sed 's/~n/ñ/g;s/~N/Ñ/g'
 }
 
 jp() {}
@@ -15,6 +15,10 @@ jp() {}
 french() {}
 
 transl() {}
+
+caps() {
+	echo "$@" | tr [a-z] [A-Z]
+}
 
 # Select a digraph from list to input
 result="`dmenu`" <<EOF
@@ -49,14 +53,17 @@ dk
 sp
 jp
 fr
+cp
 tr
 EOF
+
 case "$result" in
 	dk\ *) result="`dansk  "${result#dk }"`" ;;
 	es\ *) result="`espana "${result#es }"`" ;;
 	jp\ *) result="`jp     "${result#jp }"`" ;;  
 	fr\ *) result="`french "${result#fr }"`" ;; 
 	tr\ *) result="`transl "${result#tr }"`" ;;
+	cp\ *) result="`caps   "${result#cp }"`" ;;
 	*) result="${result##* }" ;;
 esac
 xdotool type --clearmodifiers --delay 50 -window "`lsw | tail -n 1`" "$result"
