@@ -1,0 +1,29 @@
+#!/bin/sh
+
+usage() {
+	printf '%s %s %s\n' "Usage:" "$0" "<file>"
+	exit
+}
+test -z "$1" && usage
+
+# Generate our tempfile, copy our image to it.
+IMG="$(mktemp)" 
+cp "$1" "$IMG"
+
+# Start up image viewer, it will update on file changes automatically
+imv "$IMG" &
+
+printf '%s\n' "Enter a command to run on file"
+
+# Main evaluation loop
+while IFS=$'\n' read -r input; do
+	case "$input" in
+		convert*) eval convert "$1" "${input#convert\ *}" "$IMG" ;;
+		quit) break ;;
+		apply) cp "$IMG" "$(dirname "$1")/new_$(basename "$1")"; break ;;
+	esac
+done
+
+# Clean up
+rm -rf "$DIR"
+pkill imv
