@@ -6,6 +6,13 @@ usage() {
 }
 test -z "$1" && usage
 
+help() {
+	case "$1" in
+		convert) convert -help ;;
+		mogrify) mogrify -help ;;
+	esac
+}
+
 # Generate our tempfile, copy our image to it.
 IMG="$(mktemp)" 
 cp "$1" "$IMG"
@@ -13,12 +20,14 @@ cp "$1" "$IMG"
 # Start up image viewer, it will update on file changes automatically
 imv "$IMG" &
 
-printf '%s\n' "Enter a command to run on file"
 
 # Main evaluation loop
-while IFS=$'\n' read -r input; do
+printf '%s\n' "Enter a command to run on file"
+while IFS=$'\n' read -p "-> " input; do
 	case "$input" in
 		convert*) eval convert "$1" "${input#convert\ *}" "$IMG" ;;
+		mogrify*) eval mogrify "$1" "${input#mogrify\ *}" "$IMG" ;;
+		help*) help "${input#help\ *}" ;;
 		quit) break ;;
 		apply) cp "$IMG" "$(dirname "$1")/new_$(basename "$1")"; break ;;
 	esac
