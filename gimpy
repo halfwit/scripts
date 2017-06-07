@@ -23,13 +23,17 @@ imv "$IMG" &
 
 # Main evaluation loop
 printf '%s\n' "Enter a command to run on file"
+count=0
 while IFS=$'\n' read -p "-> " input; do
 	case "$input" in
+		help*) help "${input#help\ *}" ;;
 		convert*) eval convert "$1" "${input#convert\ *}" "$IMG" ;;
 		mogrify*) eval mogrify "$1" "${input#mogrify\ *}" "$IMG" ;;
-		help*) help "${input#help\ *}" ;;
-		quit) break ;;
-		apply) cp "$IMG" "$(dirname "$1")/new_$(basename "$1")"; break ;;
+		apply) 
+			count=$((count + 1))
+			printf '%s %s\n' "Saving file as:" "$(dirname "$1")"/"$count"_"$(basename "$1")"
+			cp "$IMG" "$(dirname "$1")"/"$count"_"$(basename "$1")" ;;
+		quit|exit) break ;;
 	esac
 done
 
