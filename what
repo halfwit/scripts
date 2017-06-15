@@ -1,3 +1,3 @@
 #!/bin/sh
 
-dsearch "!g what $*" &
+dsearch "!g what $*" &>/dev/null &
