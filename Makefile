@@ -17,6 +17,7 @@ SRC = \
 	pw \
 	stream \
 	top \
+	sendtext \
 	station \
 	sx \
 	updatefeeds \

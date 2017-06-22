@@ -1,0 +1,8 @@
+#!/bin/sh
+
+sed 's/ /\\ /g' | while IFS='$\n' read -r message; do
+	adb shell am start -a android.intent.action.SENDTO -d sms:+1"$1" --es sms_body "$message" --ez exit_on_sent true
+	adb shell input keyevent 22
+	adb shell input keyevent 66
+	adb shell input keyevent 3
+done
