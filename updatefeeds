@@ -4,13 +4,14 @@
 RSS="$XDG_CACHE_HOME"/rss
 
 fetch_data() {
-	data=$(curl -sBX GET -L "$1" -A "Mozilla/5.0 (Linux; Android 6.0.1; Nexus  MOB3OD)" | xml2 | sed 's|/feed/entry/title/@type||')
+	data="$(curl -sBX GET -L "$1" -A "Mozilla/5.0 (Linux; Android 6.0.1; Nexus  MOB3OD)" | xml2 | sed 's|/feed/entry/title/@type||')"
 	case "$data" in
-		*itunes*podcast*1.0*)	echo "$data" | grep -e '/rss/channel/item/enclosure/@url' -e '/rss/channel/item/title' ;;
-		*xmlns:rdf*)		echo "$data" | grep -e 'RDF/item/title'-e 'RDF/item/link' ;;
-		*rss*version*2.0*)	echo "$data" | grep -e '/rss/channel/item/title' -e '/rss/channel/item/link' ;;
-		*Atom*)				echo "$data" | grep -e '/feed/entry/title' -e '/feed/entry/link.*href' ;;
-		*atom*)				echo "$data" | grep -e '/feed/entry/title' -e '/feed/entry/link.*href' ;;
+		*itunes*podcast*1.0*)	grep -e '/rss/channel/item/enclosure/@url' -e '/rss/channel/item/title' <<< "$data" ;;
+		*xmlns:rdf*)		grep -e 'RDF/item/title' -e 'RDF/item/link' <<< "$data" ;;
+		
+		*rss?version=*2.0*)	grep -e '/rss/channel/item/title' -e '/rss/channel/item/link' <<< "$data" ;;
+		*Atom*)				grep -e '/feed/entry/title' -e '/feed/entry/link.*href' <<< "$data" ;;
+		*atom*)				grep -e '/feed/entry/title' -e '/feed/entry/link.*href' <<< "$data" ;;
 		*) echo "Mismatch on $1" >> ~/rss_issue && exit 0 ;;
 	esac
 }
