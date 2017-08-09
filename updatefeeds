@@ -10,6 +10,7 @@ fetch_data() {
 		*xmlns:rdf*)		grep -e 'RDF/item/title' -e 'RDF/item/link' <<< "$data" ;;
 		
 		*rss?version=*2.0*)	grep -e '/rss/channel/item/title' -e '/rss/channel/item/link' <<< "$data" ;;
+		*rss/@version=2.0*)	grep -e '/rss/channel/item/title' -e '/rss/channel/item/link' <<< "$data" ;;
 		*Atom*)				grep -e '/feed/entry/title' -e '/feed/entry/link.*href' <<< "$data" ;;
 		*atom*)				grep -e '/feed/entry/title' -e '/feed/entry/link.*href' <<< "$data" ;;
 		*) echo "Mismatch on $1" >> ~/rss_issue && exit 0 ;;
