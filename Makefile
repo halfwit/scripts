@@ -9,6 +9,7 @@ SRC = \
 	commit \
 	compose \
 	irc \
+	googler \
 	gimpy \
 	news \
 	np \
