@@ -1,4 +1,4 @@
-# dsearch - dmenu based frontend 
+# A selection of scripts that compliment my userland
 # See LICENSE file for copyright and license details.
 
 PREFIX ?= /usr/local
