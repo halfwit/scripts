@@ -1,0 +1,25 @@
+#!/bin/sh
+
+varless() {
+	echo "$1" | less
+}
+
+filter() {
+	awk '/(type|func|var)/{print $1, $2}' | sed 's/(.*//'
+}
+
+handle() {
+	while read -r result; do
+		"$TERMINAL" -e varless "$(go doc "$1.$result")"	
+	done
+}
+
+## Run a search to check if there's ambiguity
+result="$(go-search "$1" | grep "godoc.org.*")"
+case "$(printf '%s\n' "$result" | wc -l)" in
+	1) printf '%s\n' "$result" ;;
+	*) printf '%s\n' "$result" | dmenu -p "disambiguate" ;;
+esac | sed -n -e "s|^.*\($1\)|\1|p"
+
+# Main loop
+go doc "$1" | filter | dmenu -p "$1" | awk '{print $2}' | handle "$1"
