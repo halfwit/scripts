@@ -1,49 +1,20 @@
 #!/usr/bin/env bash
 
 ## Script to fetch RSS + atom feeds 
+## See ://gist.github.com/halfwit/d5251e2b0e58c1f5199c49dfbf836e5d for sample xslt files to use
 RSS="$XDG_CACHE_HOME"/rss
 
+tmp="$(mktemp)"
+
 fetch_data() {
-	data="$(curl -sBX GET -L "$1" -A "Mozilla/5.0 (Linux; Android 6.0.1; Nexus  MOB3OD)" | xml2 | sed 's|/feed/entry/title/@type||')"
-	case "$data" in
-		*itunes*podcast*1.0*)	grep -e '/rss/channel/item/enclosure/@url' -e '/rss/channel/item/title' <<< "$data" ;;
-		*xmlns:rdf*)		grep -e 'RDF/item/title' -e 'RDF/item/link' <<< "$data" ;;
-		
-		*rss?version=*2.0*)	grep -e '/rss/channel/item/title' -e '/rss/channel/item/link' <<< "$data" ;;
-		*rss/@version=2.0*)	grep -e '/rss/channel/item/title' -e '/rss/channel/item/link' <<< "$data" ;;
-		*Atom*)				grep -e '/feed/entry/title' -e '/feed/entry/link.*href' <<< "$data" ;;
-		*atom*)				grep -e '/feed/entry/title' -e '/feed/entry/link.*href' <<< "$data" ;;
-		*) echo "Mismatch on $1" >> ~/rss_issue && exit 0 ;;
-	esac
+	curl -sL "$1" -o "$tmp"
+	xml tr "$XDG_DATA_HOME"/xslt/"$(xml el "$tmp" | head -n 1)".xslt "$tmp"
 }
 
 build_folders() {
-
-	while {
-		read -r first
-		read -r second
-	} do
-
-		#This sucks, but whatever
-		case "$first" in
-			*feed*entry*title=*)	title="$(echo "$first"	| sed 's|/feed/entry/title=||' | sed 's|/||g')"
-						link="$(echo "$second"	| xurls)" ;;
-			*rss*item*title*)	title="$(echo "$first"	| sed 's|/rss/channel/item/title=||' | sed 's|/||g')"
-						link="$(echo "$second"	| xurls)" ;;
-			*rdf*item*title*)	title="$(echo "$first"	| sed 's|/rdf:RDF/item/title=||' | sed 's|/||g')"
-						link="$(echo "$second"	| xurls)" ;;
-			*enclosure*)		title="$(echo "$second" | sed 's|/rss/channel/item/title=||' | sed 's|/||g')"
-						link="$(echo "$first"	| xurls)" ;;
-			*rdf*item*link*)	title="$(echo "$second" | sed 's|/rdf:RDF/item/title=||' | sed 's|/||g')"
-						link="$(echo "$first"	| xurls)" ;;
-			*rss*item*link*)	title="$(echo "$second" | sed 's|/rss/channel/item/title=||' | sed 's|/||g')"
-						link="$(echo "$first"	| xurls)" ;;
-			*feed*entry*link*)	title="$(echo "$second" | sed 's|/feed/entry/title=||' | sed 's|/||g')"
-						link="$(echo "$first"	| xurls)" ;;
-			*)			echo "Mismatch with item $first $second in $i" >> ~/rss_issue && exit 0 ;;
-		esac
-
+	while read -r link title; do
 		if [[ ! -f "$RSS/$1/$title" ]]; then
+			mkdir -p "$(dirname "$RSS/$1/[new] $title")"
 			echo "$link" > "$RSS/$1/[new] $title"
 		fi
 	done
