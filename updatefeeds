@@ -30,6 +30,7 @@ while :; do
 		read -r url < "$i"/url 
 		fetch_data "$url" | build_folders "$i"
 	done 
-	find ~/local/cache/rss -name "\[new\]*" | wc -l > $RSS/count
+	# ou can comment this out, it's just for my status bar
+	dirname "$RSS"/*/\[new\]* | wc -l > "$XDG_RUNTIME_DIR/statusbar/rss"
 	sleep 1774
 done
