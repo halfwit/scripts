@@ -31,6 +31,8 @@ while :; do
 		fetch_data "$url" | build_folders "$i"
 	done 
 	# ou can comment this out, it's just for my status bar
-	dirname "$RSS"/*/\[new\]* | wc -l > "$XDG_RUNTIME_DIR/statusbar/rss"
+	if ls -d "$RSS"/*/"[new]"* >/dev/null; then
+		dirname "$RSS"/*/\[new\]* | wc -l > "$XDG_RUNTIME_DIR/statusbar/rss"
+	fi
 	sleep 1774
 done
