@@ -1,38 +1,35 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 ## Script to fetch RSS + atom feeds 
 ## See ://gist.github.com/halfwit/d5251e2b0e58c1f5199c49dfbf836e5d for sample xslt files to use
-RSS="$XDG_CACHE_HOME"/rss
-
-tmp="$(mktemp)"
-
-fetch_data() {
-	curl -sL "$1" -o "$tmp"
-	xml tr "$XDG_DATA_HOME"/xslt/"$(xml el "$tmp" | head -n 1)".xslt "$tmp"
-}
+RSS="$XDG_DATA_HOME"/rss
+TMP="$(mktemp -d )"
 
 build_folders() {
+	read -r feed
 	while read -r link title; do
-		if [[ ! -f "$RSS/$1/$title" ]]; then
-			mkdir -p "$(dirname "$RSS/$1/[new] $title")"
-			echo "$link" > "$RSS/$1/[new] $title"
+		if ! test -f "$RSS/$feed/*read/$title"; then
+			mkdir -p "$(dirname "$RSS/$feed/unread/$title")"
+			echo "$link" > "$RSS/$feed/unread/$title"
 		fi
 	done
 }
 
-while :; do
+fetch() {
+	cd "$TMP"
+	curl -sLOK "$XDG_DATA_HOME"/feedurls
+}
 
-	cd "$RSS"
-	for i in *; do
-		if [[ $i == ".stfolder" ]] || [[ $i == "count" ]]; then
-			continue
-		fi
-		read -r url < "$i"/url 
-		fetch_data "$url" | build_folders "$i"
-	done 
-	# ou can comment this out, it's just for my status bar
-	if ls -d "$RSS"/*/"[new]"* >/dev/null; then
-		dirname "$RSS"/*/\[new\]* | wc -l > "$XDG_RUNTIME_DIR/statusbar/rss"
-	fi
-	sleep 1774
-done
+parse() {
+	xml tr "$XDG_DATA_HOME"/xslt/"$(xml el "$TMP"/* | head -n 1)".xslt "$TMP"/* | build_folders
+}
+
+fetch && wait
+parse
+
+# you can comment this out, it's just for my status bar
+if ls -d "$RSS"/*/unread/* >/dev/null; then 
+	dirname "$RSS"/*/unread/* | wc -l > "$XDG_RUNTIME_DIR/statusbar/rss"
+fi
+
+rm -rf "$TMP"

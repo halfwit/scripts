@@ -22,7 +22,6 @@ SRC = \
 	sendtext \
 	station \
 	sx \
-	updatefeeds \
 	urlscrub \
 	varless \
 	void-buildchain \
