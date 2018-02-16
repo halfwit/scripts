@@ -1,0 +1,32 @@
+#!/bin/sh
+# Find files with TODO elements, list them from oldest to newest
+
+# Source folder
+CODE=~/code
+
+list() {
+	cd "$CODE" || exit 1
+	grep --exclude-dir=".git" -Rl "TODO:"
+}
+	
+chrono_sort() {
+	cd "$CODE" || exit 1
+	while read -r line; do
+		stat -c '%Y %n' "$line"
+	done | sort -n | cut -d ' ' -f2
+}
+
+handle() {
+	while read -r line; do
+		"$EDITOR" +"$(awk -v line="$line" '$0 ~ line {print FNR}' "$1")" "$1"
+	done
+} 
+
+filter() {
+	while read -r line; do
+		# Here we call handle with our scoped filename
+		grep "TODO:" "$CODE/$line" | sed 's/^.*TODO: //;s/\*\/$//' | dmenu -p "Select task " | handle "$CODE/$line"
+	done
+}
+
+list | chrono_sort | dmenu -p "Select file to complete: " | filter

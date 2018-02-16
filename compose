@@ -23,7 +23,6 @@ caps() {
 
 # Select a digraph from list to input
 result="$(dmenu)" <<EOF
-$(xcmenu --get 0)
 !! ¡
 cent ¢
 pound £
@@ -67,4 +66,5 @@ case "$result" in
 	cp\ *) result="$(caps   "${result#cp }")" ;;
 	*) result="${result##* }" ;;
 esac
-xdotool type --delay 50 -window "$WIN" "$result"
+
+xdotool type --delay 50 --window "$(printf '%d\n' $WIN)" "$result"

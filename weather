@@ -1,4 +1,6 @@
 #!/bin/sh
 tmp="$(mktemp)"
-curl -s "http://wttr.in/grande%20prairie" > $tmp 
+curl -s "http://wttr.in/fort%20smith,%20canada" > $tmp 
 st -c weather -e less "$tmp"
+wait
+rm "$tmp"

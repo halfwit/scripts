@@ -19,6 +19,7 @@ SRC = \
 	pw \
 	stream \
 	top \
+	tasks \
 	sendtext \
 	station \
 	sx \
