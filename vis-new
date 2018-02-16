@@ -1,0 +1,6 @@
+#!/bin/sh
+CODE="${1:-$HOME/code}"
+result="$(ls "$CODE" | dmenu -p "Select folder or create new")"
+test -z "$result" && exit
+mkdir -p "$(dirname "$CODE/$result")"
+exec $TERMINAL -c edit /bin/vis "$CODE/$result"

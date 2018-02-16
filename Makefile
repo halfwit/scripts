@@ -4,26 +4,27 @@
 PREFIX ?= /usr/local
 
 SRC = \
-	bookkeep \
 	barkeep \
+	bookkeep \
 	commit \
 	compose \
-	irc \
-	godoc-search \
 	gimpy \
+	godoc-search \
+	irc \
 	news \
 	np \
 	pull \
 	push \
 	pw \
-	stream \
-	top \
-	tasks \
 	sendtext \
 	station \
+	stream \
 	sx \
+	tasks \
+	top \
 	urlscrub \
 	varless \
+	vis-new \
 	void-buildchain \
 	weather \
 	what \
