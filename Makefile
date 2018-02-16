@@ -10,7 +10,6 @@ SRC = \
 	compose \
 	irc \
 	godoc-search \
-	googler \
 	gimpy \
 	news \
 	np \

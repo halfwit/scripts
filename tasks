@@ -2,11 +2,11 @@
 # Find files with TODO elements, list them from oldest to newest
 
 # Source folder
-CODE="${1:-~/code}
+CODE="${1:-$HOME/code}"
 
 list() {
 	cd "$CODE" || exit 1
-	grep --exclude-dir=".git" -Rl "TODO:"
+	grep --exclude="tasks" --exclude-dir=".git" -Rl "TODO:"
 }
 	
 chrono_sort() {
