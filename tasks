@@ -2,7 +2,7 @@
 # Find files with TODO elements, list them from oldest to newest
 
 # Source folder
-CODE=~/code
+CODE="${1:-~/code}
 
 list() {
 	cd "$CODE" || exit 1
