@@ -10,7 +10,7 @@ if pgrep mpg123; then
 	pkill mpg123
 	exit 0
 fi
-mpc play
+#mpc play
 mpg123 --no-control -b 1024 "${MPD_HOST##*@}:$MPD_PORT" &>/dev/stdout | while read -r line; do
-	echo "$line" | grep StreamTitle | sed "s/ICY-META: StreamTitle='/♫ /" | sed "s/';StreamUrl=.*//" | tail -c 80 > "$XDG_RUNTIME_DIR/statusbar/media"
+	echo "$line" | grep StreamTitle | sed "s/ICY-META: StreamTitle='/♫ /;s/';StreamUrl=.*//;s/\[.*\] //;s/-.*-/-/" | tail -c 80 > "$XDG_RUNTIME_DIR/statusbar/media"
 done
