@@ -1,6 +1,5 @@
 #!/bin/sh
 
-WIN="$(lsw | tail -n 1)"
 ## Select digraph, or enter dk, jp, es, fr, or tr to have the text ran through eithre a parser or through translate
 dansk() {
 	echo "$@" | sed 's|ae|æ|g;s|/o|ø|g;s|a^|å|g;s|AE|Æ|g;s|/O|Ø|g;s|A^|Å|g'
@@ -64,7 +63,6 @@ case "$result" in
 	fr\ *) result="$(french "${result#fr }")" ;; 
 	tr\ *) result="$(transl "${result#tr }")" ;;
 	cp\ *) result="$(caps   "${result#cp }")" ;;
-	*) result="${result##* }" ;;
+	*) result="${result#* }" ;;
 esac
-
-xdotool type --delay 50 --window "$(printf '%d\n' $WIN)" "$result"
+xdotool type --delay 50 --window "$1" "$result"
