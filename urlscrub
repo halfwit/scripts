@@ -1,7 +1,27 @@
 #!/bin/sh --
-# Cheapo url spawner for st using https://github.com/mvdan/xurls and https://github.com/halfwit/plumber
-## Split into two streams, remove control characters in one, then filter
-## This allows us to get multiline links in curses programs like Weechat
-{ { tee /dev/fd/3 | tr -d "[:cntrl:]" >&9; 
+
+# Schema is as follows
+# someuri.somedomain/some/path, anything that satisfies this
+# ~/a/path/to/somewhere
+# /a/path/to/somewhere
+
+filter() {
+	case $1 in
+		# Special case to hit <someurl.com>
+		http://|https://|git://) echo "$1" ;;
+		\<[a-zA-Z0-9-_]*.[a-zA-Z0-9-_]*/[a-zA-Z0-9-_]*) echo "$1" | sed 's|<|https://|;s|>||'  ;;
+		[a-zA-Z0-9-_]*.[a-zA-Z0-9-_]*/[a-zA-Z0-9-_]*) echo "https://$1"  ;;
+		/[a-zA-Z0-9.-_]*/[a-zA-Z0-9.-_]*) echo "$1" ;;
+		\~/[a-zA-Z0-9.-_]*) echo "$1" ;;
+	esac
+}
+
+# Complex little bit of shell redirection which allows piping of the stdin through tr as well as not (removing control chars in weechat, for example)
+{ { tee /dev/fd/3 | tr -d "[:cntrl:]" >&9;
 	} 3>&1 >&9; 
-} 9>&1 | xurls | sed 's/^.*\(http.*$\)/\1/;s|file://||' | uniq | tac | dmenu -p URLs | xe -s 'plumber $1'
+} 9>&1 | while read -r line; do
+	# Chunk out lines into words and run them through filter
+	for i in $line; do
+		filter "$i"
+	done
+done | sed 's/^.*\(http.*$\)/\1/;s|file://||' | uniq | tac | dmenu -p links | xe -s 'plumber $1'
