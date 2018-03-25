@@ -13,6 +13,9 @@ filter() {
 		[a-zA-Z0-9-_]*.[a-zA-Z0-9-_]*/[a-zA-Z0-9-_]*) echo "https://$1"  ;;
 		/[a-zA-Z0-9.-_]*/[a-zA-Z0-9.-_]*) echo "$1" ;;
 		\~/[a-zA-Z0-9.-_]*) echo "$1" ;;
+		[a-zA-Z0-9-_]*.[a-zA-Z][a-zA-Z][a-zA-Z]) echo "https://$1" ;;
+		[a-zA-Z0-9-_]*.[a-zA-Z][a-zA-Z]) echo "https://$1" ;;
+		[a-zA-Z0-9-_]*.[a-zA-Z]) echo "https://$1" ;;
 	esac
 }
 
