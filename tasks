@@ -4,6 +4,11 @@
 # Source folder
 CODE="${1:-$HOME/code}"
 
+# Make sure we're not at a file, but at a dir
+if ! test -d "$CODE"; then
+	CODE="$(dirname "$CODE")"
+fi
+
 list() {
 	cd "$CODE" || exit 1
 	grep --exclude="tasks" --exclude-dir=".git" -Rl "TODO:"
