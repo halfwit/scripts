@@ -1,6 +1,9 @@
 #!/bin/sh
 # Find files with TODO elements, list them from oldest to newest
 
+# Set your favorite editor here
+EDITOR=edit
+
 # Source folder
 CODE="${1:-$HOME/code}"
 
