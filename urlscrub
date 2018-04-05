@@ -27,4 +27,4 @@ filter() {
 	for i in $line; do
 		filter "$i"
 	done
-done | sed 's/^.*\(http.*$\)/\1/;s|file://||' | uniq | tac | dmenu -p links | xe -s 'plumber $1'
+done | sed 's/^.*\(http.*$\)/\1/;s|file://||;s/…//' | uniq | tac | dmenu -p links | xe -s 'plumber $1'
