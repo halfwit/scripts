@@ -6,11 +6,9 @@ clean() {
 	echo "" > "$XDG_RUNTIME_DIR/statusbar/media"
 }
 
-if pgrep mpg123; then
-	pkill mpg123
+if pgrep ogg123; then
+	pkill ogg123
 	exit 0
 fi
-#mpc play
-mpg123 --no-control -b 1024 "${MPD_HOST##*@}:$MPD_PORT" &>/dev/stdout | while read -r line; do
-	echo "$line" | grep StreamTitle | sed "s/ICY-META: StreamTitle='/♫ /;s/';StreamUrl=.*//;s/\[.*\] //;s/-.*-/-/" | tail -c 80 > "$XDG_RUNTIME_DIR/statusbar/media"
-done
+
+ogg123 --no-control -p 27 -b 1024 "http://servy:28129" &>/dev/stdout | awk '/Title: /{$1 = ""; print}' > "$XDG_RUNTIME_DIR/statusbar/media"
