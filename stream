@@ -11,4 +11,6 @@ if pgrep ogg123; then
 	exit 0
 fi
 
-ogg123 --no-control -p 27 -b 1024 "http://servy:28129" &>/dev/stdout | awk '/Title: /{$1 = ""; print}' > "$XDG_RUNTIME_DIR/statusbar/media"
+ogg123 --no-control -p 5 -b 512 "http://servy:28129" &>/dev/stdout | awk '/Title: /{$1 = ""; print}' | while read -r line; do
+	printf '%s\n' "$line" > "$XDG_RUNTIME_DIR/statusbar/media"
+done
