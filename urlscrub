@@ -10,7 +10,7 @@ filter() {
 		# Special case to hit <someurl.com>
 		http://*|https://*|git://*) echo "$1" ;;
 		\<[a-zA-Z0-9-_]*.[a-zA-Z0-9-_]*/[a-zA-Z0-9-_]*) echo "$1" | sed 's|<|https://|;s|>||'  ;;
-		[a-zA-Z0-9-_]*.[a-zA-Z0-9-_]*/[a-zA-Z0-9-_]*) echo "https://$1"  ;;
+		[a-zA-Z0-9-_]*.[a-zA-Z0-9-_]*/[a-zA-Z0-9-_~]*) echo "https://$1"  ;;
 		/[a-zA-Z0-9.-_]*/[a-zA-Z0-9.-_]*) echo "$1" ;;
 		\~/[a-zA-Z0-9.-_]*) echo "$1" ;;
 		[a-zA-Z0-9-_]*.[a-zA-Z][a-zA-Z][a-zA-Z]) echo "https://$1" ;;
