@@ -19,7 +19,6 @@ SRC = \
 	sendtext \
 	station \
 	stream \
-	sx \
 	tasks \
 	top \
 	urlscrub \
