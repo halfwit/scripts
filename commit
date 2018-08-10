@@ -28,7 +28,7 @@ handle_results() {
 if [[ $1 == "wc" ]]; then
 	cat <(crawl ~/code) <(check "$XDG_CONFIG_HOME") <(check "$XDG_DATA_HOME/blog") | wc -l
 else
-	column -s '|' -t <(check "$XDG_CONFIG_HOME") <(crawl ~/code) <("$XDG_DATA_HOME/blog") | dmenu -p "Commit: " | handle_results 
+	column -s '|' -t <(check "$XDG_CONFIG_HOME") <(crawl ~/code) <(crawl "$XDG_DATA_HOME/blog") | dmenu -p "Commit: " | handle_results 
 	/usr/local/share/hwwm/gitbar commit
 	/usr/local/share/hwwm/gitbar push	
 fi
