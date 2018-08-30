@@ -27,7 +27,8 @@ SRC = \
 	void-buildchain \
 	weather \
 	what \
-	when
+	when \
+	updaterepo \
 
 install:
 	@mkdir -p ${DESTDIR}${PREFIX}/bin

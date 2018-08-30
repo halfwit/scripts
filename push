@@ -25,9 +25,4 @@ handle_results() {
 }
 
 # =^.^=
-if [[ $1 == "wc" ]]; then
-	cat <(crawl ~/code) <(check "$XDG_CONFIG_HOME")| wc -l
-else
-	cat <(crawl ~/code) <(check "$XDG_CONFIG_HOME") | dmenu -p "Push repo: " | handle_results
-	/usr/local/share/hwwm/gitbar push
-fi
+cat <(crawl ~/code) <(check "$XDG_CONFIG_HOME") | dmenu -p "Push repo: " | handle_results
