@@ -19,5 +19,4 @@ crawl() {
 }
 
 crawl "$HOME/local/src" | sed "s|/local/src/||" > "$XDG_DATA_HOME"/pulls
-/usr/local/bin/gitbar
 /usr/local/share/hwwm/githbar

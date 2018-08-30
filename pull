@@ -1,11 +1,33 @@
-#!/bin/sh --
+#!/bin/bash
 
-# This is good for viewing, need a way to pull them in once we're in less
+crawl() {
+        for i in "$1"/*; do
+                cd "$i" || continue
+                if git rev-parse --is-inside-work-tree &>/dev/null; then
+                       git fetch &>/dev/null &
+                       [[ $(git rev-parse HEAD) == $(git rev-parse @{u}) ]] >/dev/null || printf '%s\n' "${i/$HOME/}"
+                else
+                        crawl "$i" &
+                        wait
+                fi
+        done
+}
+
+# Clean up pulls 
+cleanit() {
+	crawl "$HOME/local/src" | sed 's|/local/src/||' > "$XDG_DATA_HOME"/pulls
+	/usr/local/share/hwwm/gitbar
+}
+
 lessit() {
 	while read -r in; do
 		cd "$HOME/local/src/$in"
 		st -e git diff HEAD origin/HEAD --color | less -R
 	done
+	wait
+	cleanit
 }
 
 dmenu -p "Repo to view: " < "$XDG_DATA_HOME"/pulls | lessit
+
+cleanit
