@@ -28,6 +28,7 @@ SRC = \
 	weather \
 	what \
 	when \
+	updatecommit \
 	updaterepo \
 
 install:

@@ -19,6 +19,7 @@ crawl() {
 handle_results() {
 	while read -r url; do
 		cd "$HOME${url%%\ *}"
+		# Commit hook will take care of updating bar
 		git commit -a -s --verbose
 	done
 }
