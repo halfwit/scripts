@@ -19,15 +19,16 @@ cleanit() {
 	/usr/local/share/hwwm/gitbar
 }
 
-lessit() {
+terminalize() {
+	tmp="$(mktemp)"
 	while read -r in; do
 		cd "$HOME/local/src/$in"
-		st -e git diff HEAD origin/HEAD --color | less -R
+		git diff HEAD origin/HEAD --color > "$tmp"
+		st -e less -R "$tmp"
 	done
-	wait
-	cleanit
+	rm "$tmp"
 }
 
-dmenu -p "Repo to view: " < "$XDG_DATA_HOME"/pulls | lessit
+dmenu -p "Repo to view: " < "$XDG_DATA_HOME"/pulls | terminalize
 
 cleanit
