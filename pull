@@ -1,13 +1,11 @@
 #!/bin/sh --
 
+# This is good for viewing, need a way to pull them in once we're in less
 lessit() {
-	tmp="$(mktemp)"
 	while read -r in; do
-		git -C "$HOME/local/src/$in" diff HEAD origin/HEAD --color > "$tmp"
-		alias git=git-C "$HOME/local/src/$in"
-		st -e less -R "$tmp"
+		cd "$HOME/local/src/$in"
+		st -e git diff HEAD origin/HEAD --color | less -R
 	done
-	rm "$tmp"
 }
 
 dmenu -p "Repo to view: " < "$XDG_DATA_HOME"/pulls | lessit
