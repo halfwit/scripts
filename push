@@ -17,12 +17,24 @@ crawl() {
 		done
 }
 
-handle_results() {
-		while read -r url; do
-				cd "$HOME${url%%\ *}" || continue
-				st -g 60x1+20+20 -c float -e git push
-		done
+# =^.^=
+parse_dirs() {
+	cat <(crawl ~/code) <(check "$XDG_CONFIG_HOME") <(check "$XDG_DATA_HOME/blog") > "$XDG_DATA_HOME/pushes"
+	/usr/local/share/hwwm/gitbar
 }
 
-# =^.^=
-cat <(crawl ~/code) <(check "$XDG_CONFIG_HOME") | dmenu -p "Push repo: " | handle_results
+handle_results() {
+	while read -r url; do
+		cd "$HOME${url%%\ *}" || continue
+		st -g 60x1+20+20 -c float -e git push
+		wait
+		# Update
+		parse_dirs
+	done
+}
+
+# Initialize
+parse_dirs
+
+# choose folder
+dmenu -p "Push repo: " < "$XDG_DATA_HOME/pushes" | handle_results
