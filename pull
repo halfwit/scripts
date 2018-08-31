@@ -25,6 +25,7 @@ terminalize() {
 		cd "$HOME/local/src/$in"
 		git diff HEAD origin/HEAD --color > "$tmp"
 		st -e less -R "$tmp"
+		pkill $$
 	done
 	rm "$tmp"
 }
