@@ -28,11 +28,13 @@ crawl() {
 # One case where quotations hurt.
 inotifywait -qmre close_write ${files[*]} | while read -r file; do
 	case "$file" in
-		*zsh_history*) continue ;;
-		/home/halfwit/local/cfg*) check "$XDG_CONFIG_HOME" > "$XDG_DATA_DIR/commitcfg" ;;
-		/home/halfwit/code*)      crawl ~/code > "$XDG_DATA_DIR/commitcode" ;;
-			/home/halfwit/local/sha*) crawl ~/local/share/blog > "$XDG_DATA_DIR/commitblog" ;;
+		*zsh_history*)            continue                                              ;;
+		/home/halfwit/local/cfg*) check "$XDG_CONFIG_HOME" > "$XDG_DATA_DIR/commitcfg"  ;;
+		/home/halfwit/code*)      crawl ~/code             > "$XDG_DATA_DIR/commitcode" ;;
+		/home/halfwit/local/sha*) crawl ~/local/share/blog > "$XDG_DATA_DIR/commitblog" ;;
 	esac
+
 	cat "$XDG_DATA_DIR/commitcfg" "$XDG_DATA_DIR/commitcode" "$XDG_DATA_DIR/commitblog" > "$XDG_DATA_DIR/commits"
 	/usr/local/share/hwwm/gitbar
+
 done
