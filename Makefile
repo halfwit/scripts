@@ -10,6 +10,7 @@ SRC = \
 	compose \
 	gimpy \
 	godoc-search \
+	gpmsongsearch \
 	irc \
 	news \
 	np \

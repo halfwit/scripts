@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+## Simple script to get a list of links relating to songs on Google Play music
+
+# Gmusicproxy host IP
+host=192.168.0.203
+port=9999
+
+get_urls() {
+	curl -s "http://$host:$port/$1?id=$2" | grep http
+}
+
+list_albums() {
+	id="$(curl -s "http://$host:$port/search_id?type=artist&artist=${1// /+}")"
+	curl -s "http://$host:$port/get_discography_artist?id=$id&only_url=yes&format=text" | sed 's/^.*id=//'
+}
+
+get_id() {
+	artist="`printf '%s\n' "${2%\ -*}"`"
+	title="`printf '%s\n' "${2#*-\ }"`"
+	curl -s "http://$host:$port/$1&artist=${artist// /+}&title=${title// /+}"
+}
+
+# This is to help with radio search types, depending on the type of string sent in. "my band - my song" will search for radio stations related to a specific song, else it will search for an artist
+get_mode() {
+	case "$1" in
+		*-*) printf '%s\n' "song"   ;;
+		*)   printf '%s\n' "artist" ;;
+	esac
+}
+
+# Search by album, discography, single song
+case "$1" in
+	radio)       mode="$(get_mode "$2")"
+                 id="$(get_id "search_id?type=$mode" "$2")"
+                 get_urls "get_new_station_by_id" "$id&type=$mode&num_tracks=50"
+                 ;;
+	album)       id="$(get_id "search_id?type=album" "$2")"
+                 get_urls "get_album" "$id"
+                 ;;
+	discography) list_albums "$2" | while read -r id; do
+                     get_urls "get_album" "$id"
+                 done
+                 ;;
+	ifl)         curl -s "http://$host:$port/get_ifl_station?num_tracks=50" | grep http
+                 ;;
+	*)           id="$(get_id "search_id?type=song" "$@")"
+                 printf 'http://%s:%s/get_song?id=%s\n' "$host" "$port" "$id"
+                 ;;
+esac
