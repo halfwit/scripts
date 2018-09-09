@@ -13,12 +13,6 @@ crawl() {
         done
 }
 
-# Clean up pulls 
-cleanit() {
-	crawl "$HOME/local/src" | sed 's|/local/src/||' > "$XDG_DATA_HOME"/pulls
-	/usr/local/share/hwwm/gitbar
-}
-
 terminalize() {
 	tmp="$(mktemp)"
 	while read -r in; do
@@ -26,10 +20,10 @@ terminalize() {
 		git diff HEAD origin/HEAD --color > "$tmp"
 		st -e less -R "$tmp"
 		pkill $$
+		cd /home/halfwit/local/src/"$in" || continue
+		"$XDG_CONFIG_HOME/git/template/hooks/post-merge"
 	done
 	rm "$tmp"
 }
 
 dmenu -p "Repo to view: " < "$XDG_DATA_HOME"/pulls | terminalize
-
-cleanit
