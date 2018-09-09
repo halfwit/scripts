@@ -1,5 +1,12 @@
 #!/bin/sh
+
+trap clean EXIT HUP INT
 tmp=`mktemp`
+
+clean() {
+	rm "$tmp"
+}
+
 curl -s "http://nycurl.sytes.net/" > $tmp
 st -c news -e less "$tmp"
-rm "$tmp"
+
