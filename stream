@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/bin/sh
 
-trap 'clean' EXIT SIGINT SIGHUP
+trap 'clean' EXIT HUP INT
 
 clean() {
 	echo "" > "$XDG_RUNTIME_DIR/statusbar/media"
@@ -11,6 +11,7 @@ if pgrep ogg123; then
 	exit 0
 fi
 
-ogg123 --no-control -p 5 -b 512 "http://192.168.0.203:28129" &>/dev/stdout | awk '/Title: /{$1 = ""; print}' | while read -r line; do
-	printf '%s\n' "$line" > "$XDG_RUNTIME_DIR/statusbar/media"
+ogg123 -p 5 -b 512 "http://192.168.0.203:28129" 2>&1 /dev/stdout | while read -r line; do
+	mpc current > $XDG_RUNTIME_DIR/statusbar/media
 done
+
