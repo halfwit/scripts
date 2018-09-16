@@ -14,16 +14,19 @@ crawl() {
 }
 
 terminalize() {
-	tmp="$(mktemp)"
 	while read -r in; do
-		cd "$HOME/local/src/$in"
+		test "$in" = "quit" && return 1
+		cd "$HOME/local/src/$in" || continue
+		tmp="$(mktemp)"
 		git diff HEAD origin/HEAD --color > "$tmp"
 		st -e less -R "$tmp"
 		pkill $$
-		cd /home/halfwit/local/src/"$in" || continue
+		rm "$tmp"
 		"$XDG_CONFIG_HOME/git/template/hooks/post-merge"
 	done
-	rm "$tmp"
 }
 
-dmenu -p "Repo to view: " < "$XDG_DATA_HOME"/pulls | terminalize
+# Exit early if we have no entries in pulls file
+test $(wc -l < "$XDG_DATA_HOME/pulls") -gt 0 || exit 0
+
+dmenu -p "Repo to view (type quit to exit): " < "$XDG_DATA_HOME"/pulls | terminalize && exec $0

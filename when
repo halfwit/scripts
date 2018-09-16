@@ -1,4 +1,3 @@
 #!/bin/sh
 
-# It's just a shell wrapper
 dsearch "!g when $*" &
