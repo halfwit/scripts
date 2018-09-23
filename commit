@@ -2,7 +2,7 @@
 
 scrub() {
 	tmp="$(mktemp)"
-	while read -r "$in"; do
+	while read -r in; do
 		test "$in" = "$1" && continue
 	done < "$XDG_DATA_HOME/commits" > "$tmp"
 	mv "$tmp" "$XDG_DATA_HOME/commits"
