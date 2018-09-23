@@ -8,33 +8,17 @@ files=(
 )	
 
 check() {
-    cd "$1" || return 0
-    if git diff --shortstat 2>/dev/null | grep -q changed; then
-        printf '%s\n' "${1/$HOME/}"
-        return 1
-    fi
-    return 0
+	grep "$1" "$XDG_DATA_HOME/commits" || printf '%s\n' "$1" >> "$XDG_DATA_HOME/commits"
 }
-
-crawl() {
-    for i in "$1"/*; do
-        cd "$i" 2>/dev/null || continue
-        check "$i" && crawl "$i" &
-    done
-}
-
-
 
 # One case where quotations hurt.
-inotifywait -qmre close_write ${files[*]} | while read -r file; do
-	case "$file" in
-		*zsh_history*)            continue                                              ;;
-		/home/halfwit/local/cfg*) check "$XDG_CONFIG_HOME" > "$XDG_DATA_DIR/commitcfg"  ;;
-		/home/halfwit/code*)      crawl ~/code             > "$XDG_DATA_DIR/commitcode" ;;
-		/home/halfwit/local/sha*) crawl ~/local/share/blog > "$XDG_DATA_DIR/commitblog" ;;
-	esac
+inotifywait -qmre close_write ${files[*]} | while read -r path _ file; do
+	test "$file" = ".zsh_history" && continue 
+	cd "$path" || continue
+	if git diff --shortstat 2>/dev/null | grep -q changed; then
+		check "$path"
+	fi
 
-	cat "$XDG_DATA_DIR/commitcfg" "$XDG_DATA_DIR/commitcode" "$XDG_DATA_DIR/commitblog" > "$XDG_DATA_DIR/commits"
 	/usr/local/share/hwwm/gitbar
 
 done
