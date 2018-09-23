@@ -1,11 +1,24 @@
 #!/bin/bash
 
+scrub() {
+	tmp="$(mktemp)"
+	while read -r "$in"; do
+		test "$in" = "$1" && continue
+	done < "$XDG_DATA_HOME/commits" > "$tmp"
+	mv "$tmp" "$XDG_DATA_HOME/commits"
+}
+
 terminalize() {
 	while read -r in; do
 		test "$in" = "quit" && return 1
 		cd "$in" || continue
-		# Commit hook will take care of updating bar
 		git commit -a -s --verbose
+		wait
+		# If we still have pending commits, we don't scrub the entry
+		if git diff --shortstat 2>/dev/null | grep -q changed; then
+			continue
+		fi
+		scrub "$in"
 	done
 	/usr/local/share/hwwm/gitbar
 }
