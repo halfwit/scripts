@@ -23,6 +23,7 @@ terminalize() {
 		# Commit hook will take care of updating bar
 		git commit -a -s --verbose
 	done
+	/usr/local/share/hwwm/gitbar
 }
 
 # Early exit if we have no pending commits
