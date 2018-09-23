@@ -25,5 +25,8 @@ terminalize() {
 	done
 }
 
+# Early exit if we have no pending commits
+test $(wc -l < "$XDG_DATA_HOME/commits") -gt 0 || exit 0
+
 # =^.^=
 column -s '|' -t <(check "$XDG_CONFIG_HOME") <(crawl ~/code) <(crawl "$XDG_DATA_HOME/blog") | dmenu -p "Repo to commit (type quit to exit): " | terminalize && exec $0
