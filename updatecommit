@@ -16,7 +16,7 @@ inotifywait -qmre close_write ${files[*]} | while read -r path _ file; do
 	test "$file" = ".zsh_history" && continue 
 	cd "$path" || continue
 	if git diff --shortstat 2>/dev/null | grep -q changed; then
-		check "$path"
+		check "${path%*/}"
 	fi
 
 	/usr/local/share/hwwm/gitbar

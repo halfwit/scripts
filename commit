@@ -1,25 +1,9 @@
 #!/bin/bash
 
-check() {
-	cd "$1" || return 0
-	if git diff --shortstat 2>/dev/null | grep -q changed; then
-		printf '%s|%s\n' "${1/$HOME/}" "$(git diff --shortstat)"
-		return 1
-	fi
-	return 0
-}
-
-crawl() {
-	for i in "$1"/*; do
-		cd "$i" 2>/dev/null || continue
-		check "$i" && crawl "$i" &
-	done
-}
-
 terminalize() {
 	while read -r in; do
 		test "$in" = "quit" && return 1
-		cd "$HOME${in%%\ *}" || continue
+		cd "$in" || continue
 		# Commit hook will take care of updating bar
 		git commit -a -s --verbose
 	done
@@ -29,5 +13,4 @@ terminalize() {
 # Early exit if we have no pending commits
 test $(wc -l < "$XDG_DATA_HOME/commits") -gt 0 || exit 0
 
-# =^.^=
-column -s '|' -t <(check "$XDG_CONFIG_HOME") <(crawl ~/code) <(crawl "$XDG_DATA_HOME/blog") | dmenu -p "Repo to commit (type quit to exit): " | terminalize && exec $0
+dmenu -p "Repo to commit (type quit to exit): " < "$XDG_DATA_HOME/commits" | terminalize && exec $0
