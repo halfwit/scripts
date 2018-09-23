@@ -16,13 +16,14 @@ crawl() {
 	done
 }
 
-handle_results() {
-	while read -r url; do
-		cd "$HOME${url%%\ *}"
+terminalize() {
+	while read -r in; do
+		test "$in" = "quit" && return 1
+		cd "$HOME${in%%\ *}" || continue
 		# Commit hook will take care of updating bar
 		git commit -a -s --verbose
 	done
 }
 
 # =^.^=
-column -s '|' -t <(check "$XDG_CONFIG_HOME") <(crawl ~/code) <(crawl "$XDG_DATA_HOME/blog") | dmenu -p "Commit: " | handle_results 
+column -s '|' -t <(check "$XDG_CONFIG_HOME") <(crawl ~/code) <(crawl "$XDG_DATA_HOME/blog") | dmenu -p "Repo to commit (type quit to exit): " | terminalize && exec $0
