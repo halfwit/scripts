@@ -1,10 +1,10 @@
-#!/bin/bash
+#!/usr/bin/env bash
 ## This could make a lot of watches. 
 
 files=(
 	"/home/halfwit/code"
 	"/home/halfwit/local/cfg"
-	"/home/halfwit/local/share/blog"
+	"/home/halfwit/local/data/blog"
 )	
 
 check() {

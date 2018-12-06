@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # This will change to something cron can run, which will set a file with a list of repositories that can be pulled from.
 # A complementary script will be made to list the `git diff` of changes to upstream and facilitate a `git apply` to the patch. 

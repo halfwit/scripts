@@ -19,12 +19,10 @@ filter() {
 	esac
 }
 
-# Complex little bit of shell redirection which allows piping of the stdin through tr as well as not (removing control chars in weechat, for example)
-{ { tee /dev/fd/3 | tr -d "[:cntrl:]" >&9;
-	} 3>&1 >&9; 
-} 9>&1 | while read -r line; do
+# FreeBSD doesn't seem to get on well with higher number file descriptors TODO: Look into alternatives/reasoning
+while read -r line; do
 	# Chunk out lines into words and run them through filter
 	for i in $line; do
 		filter "$i"
 	done
-done | sed 's/^.*\(http.*$\)/\1/;s|file://||;s/…//' | uniq | tac | dmenu -p links | xe -s 'plumber $1'
+done | sed 's/^.*\(http.*$\)/\1/;s|file://||;s/…//' | uniq | dmenu -p links | xe -s 'plumber $1'

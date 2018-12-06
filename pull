@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 crawl() {
         for i in "$1"/*; do

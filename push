@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Branches should be handled with much more care, do not use for branches
 
 check() {
