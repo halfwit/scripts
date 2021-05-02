@@ -19,7 +19,7 @@ terminalize() {
 		cd "$HOME/local/src/$in" || continue
 		tmp="$(mktemp)"
 		git diff HEAD origin/HEAD --color > "$tmp"
-		st -e less -R "$tmp"
+		$TERMINAL -e less -R "$tmp"
 		pkill $$
 		rm "$tmp"
 		"$XDG_CONFIG_HOME/git/template/hooks/post-merge"

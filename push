@@ -27,7 +27,7 @@ terminalize() {
 	while read -r in; do
 		test "$in" = "quit" && return 1
 		cd "$HOME${in%%\ *}" || continue
-		st -g 60x1+20+20 -c float -e git push
+		$TERMINAL -g 60x1+20+20 -c float -e git push
 	done
 }
 
