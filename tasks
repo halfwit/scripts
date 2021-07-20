@@ -20,4 +20,9 @@ handle() {
 	done
 } 
 
-grep -nR 'TODO:' $CODE | sed 's/\(:.*:\)\(.*\)TODO:/\1 - \2TODO:/' | dmenu -p "Select file to complete: " | handle | plumb -i
+# Regex is fickle, and only matches specific `TODO:` and `BUG:` strings
+grep -nR -e 'TODO:' -e 'BUG:' $CODE \
+	| sed 's/\(:.*:\)\(.*\)\([TODO|BUG]\):/\1 - \2\3/' \
+	| dmenu -p "Select file to complete: " \
+	| handle \
+	| plumb -i
